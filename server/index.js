@@ -35,7 +35,7 @@ app.get('/allcontacts', (req, res) => {
     try {
       await mongoClient.connect();
 
-      const result = await client.db("ancorpData").collection("contacts").findOne({ name: "ALLContacts" });
+      const result = await client.db("ancorpData").collection("contactsCollection").find().toArray();
       if (result) {
         console.log(`Found the contacts.`)
         res.json(result.data)
