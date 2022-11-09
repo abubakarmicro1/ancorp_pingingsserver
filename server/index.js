@@ -38,7 +38,7 @@ app.get('/allcontacts', (req, res) => {
       const result = await client.db("ancorpData").collection("contactsCollection").find().toArray();
       if (result) {
         console.log(`Found the contacts.`)
-        res.json(result.data)
+        res.json(result)
       } else {
         console.log(`No Contacts Found`)
         res.json({ Message: "No Contacts Found" })
