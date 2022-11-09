@@ -172,13 +172,13 @@ app.get('/getQuantityData', (req, res) => {
 })
 
 app.post('/postContacts', (req, res) => {
-  const dataToPush = req.body
+  const dataToPush = req.body.contacts
   async function postContacts(client) {
     await mongoClient.connect();
     try {
       await mongoClient.connect();
 
-      await client.db('ancorpData').collection("contactsCollection").drop()
+      await client.db('ancorpData').collection("PostContacts").drop()
       const result = await client.db("ancorpData").collection("contactsCollection").insertMany(dataToPush)
 
       console.log(`New Contacts with the following id: ${result.insertedId}`)
