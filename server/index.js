@@ -204,36 +204,35 @@ app.post('/postContacts', (req, res) => {
 
 app.get('/getContactsByEmail', (req, res) => {
   const email = req.query.email
-  async function searchEmail(email) {
+  async function searchEmail(email, client) {
     try {
-      const response = await axios.get(`${productionHost}/api/v2/odata/200/BaqSvc/WebIntegration_AllCustContacts/Data`, config)
-      res.set("Access-Control-Allow-Origin", "*");
-      const customer = response.data
-      
-      if(customer.value.length === 0) {
-        console.log('customer not found')
-        res.json(
-          {
-            status: 404,
-            Message: `${email} - customer not found`
-          }
-        )
-      } else {
-        res.json(customer.value)
-      }
+      await mongoClient.connect();
 
+      const result = await client.db("ancorpData").collection("contactsCollection").findOne({ CustCnt_EMailAddress: email });
+      if (result) {
+        console.log(`Found the Contact.`)
+        res.json({
+          status: 1,
+          data: result
+        })
+      } else {
+        console.log(`No Contatc Found`)
+        res.json({
+          status: 0,
+          Message: `Contact cannot be found - ${email}`,
+        })
+      }
     } catch (e) {
       console.log(e)
       res.json(
         {
-          status: 00,
-          Message: `There is an error searching this customer : ${email}`,
-          errMsg: getErrors(e) 
+          status: 404,
+          ErrMessage: getErrors(e)
         }
       )
     }
   }
-  searchEmail(email)
+  searchEmail(email, mongoClient)
 })
 
 app.listen(PORT, () => {
