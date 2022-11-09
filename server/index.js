@@ -179,7 +179,7 @@ app.post('/postContacts', (req, res) => {
       await mongoClient.connect();
 
       await client.db('ancorpData').collection("EpicorPostContacts").drop()
-      const result = await client.db("ancorpData").collection("contactsCollection").insertMany(dataToPush)
+      const result = await client.db("ancorpData").collection("EpicorPostContacts").insertMany(dataToPush)
 
       console.log(`New Contacts with the following id: ${result.insertedId}`)
       res.json(
