@@ -1,6 +1,7 @@
 const express = require("express");
 const PORT = process.env.PORT || 3001;
 const app = express();
+const cors = require('cors')
 
 const axios = require('axios');
 
@@ -9,6 +10,7 @@ const { theHost, config, productionHost } = require("./constants");
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 const { MongoClient } = require("mongodb")
 
@@ -174,8 +176,9 @@ app.get('/getContactsByEmail', (req, res) => {
   async function searchEmail(email) {
     try {
       const response = await axios.get(`${productionHost}/api/v2/odata/200/BaqSvc/WebIntegration_AllCustContacts/Data?$filter=CustCnt_EMailAddress eq '${email}'`, config)
+      res.set("Access-Control-Allow-Origin", "*");
       const customer = response.data
-
+      
       if(customer.value.length === 0) {
         console.log('customer not found')
         res.json(
