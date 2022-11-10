@@ -61,7 +61,7 @@ app.post('/orderPushing', (req, res) => {
     try {
       await mongoClient.connect();
 
-      // await client.db('ancorpData').collection("ordersCollector").drop()
+      await client.db('ancorpData').collection("ordersCollector").drop()
       const result = await client.db("ancorpData").collection("ordersCollector").insertOne({
         name: "ordersCollected",
         timestamping: new Date(),
