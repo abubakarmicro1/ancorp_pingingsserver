@@ -177,28 +177,30 @@ app.post('/postContacts', (req, res) => {
     await mongoClient.connect();
     try {
       await mongoClient.connect();
+      const query = { name: "EpicorPostContacts" };
+      const updateDocument = { $set: { "data": dataToPush, "timestamping": new Date() } }
+    
+    // await client.db('ancorpData').collection("EpicorPostContacts").drop()
+    const result = await client.db("ancorpData").collection("EpicorPostContacts").updateOne(query, updateDocument)
 
-      await client.db('ancorpData').collection("EpicorPostContacts").drop()
-      const result = await client.db("ancorpData").collection("EpicorPostContacts").insertMany(dataToPush)
-
-      console.log(`New Contacts with the following id: ${result.insertedId}`)
-      res.json(
-        {
-          status: 1,
-          Message: `New Contatcs Inserted`
-        })
-    } catch (e) {
-      console.log(e)
-      res.json(
-        {
-          status: 0,
-          Message: `Error adding Contacts: ${e}`
-        }
-      )
-    } finally {
-      await mongoClient.close()
-    }
+    console.log(`New Contacts Inserted`)
+    res.json(
+      {
+        status: 1,
+        Message: `New Contatcs Inserted`
+      })
+  } catch (e) {
+    console.log(e)
+    res.json(
+      {
+        status: 0,
+        Message: `Error adding Contacts: ${e}`
+      }
+    )
+  } finally {
+    await mongoClient.close()
   }
+}
   postContacts(mongoClient)
 })
 
