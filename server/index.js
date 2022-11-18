@@ -61,18 +61,22 @@ app.post('/orderPushing', (req, res) => {
     try {
       await mongoClient.connect();
 
-      await client.db('ancorpData').collection("ordersCollector").drop()
-      const result = await client.db("ancorpData").collection("ordersCollector").insertOne({
-        name: "ordersCollected",
-        timestamping: new Date(),
-        data: dataToPush.theOrders
-      })
+      // await client.db('ancorpData').collection("ordersCollector").drop()
+      const query = { name: "ordersCollector" };
+      const updateDocument = { $set: { "data": dataToPush.theOrders, "timestamping": new Date() } }
 
-      console.log(`New orders with the following id: ${result.insertedId}`)
+      const result = await client.db("ancorpData").collection("ordersCollector").updateOne(query, updateDocument)
+      // const result = await client.db("ancorpData").collection("ordersCollector").insertOne({
+      //   name: "ordersCollected",
+      //   timestamping: new Date(),
+      //   data: dataToPush.theOrders
+      // })
+
+      console.log(`New orders Inserted`)
       res.json(
         {
           status: 1,
-          Message: `New orders with the following id: ${result.insertedId}`
+          Message: `New orders Inserted`
         })
     } catch (e) {
       console.log(e)
@@ -179,28 +183,28 @@ app.post('/postContacts', (req, res) => {
       await mongoClient.connect();
       const query = { name: "EpicorPostContacts" };
       const updateDocument = { $set: { "data": dataToPush, "timestamping": new Date() } }
-    
-    // await client.db('ancorpData').collection("EpicorPostContacts").drop()
-    const result = await client.db("ancorpData").collection("EpicorPostContacts").updateOne(query, updateDocument)
 
-    console.log(`New Contacts Inserted`)
-    res.json(
-      {
-        status: 1,
-        Message: `New Contatcs Inserted`
-      })
-  } catch (e) {
-    console.log(e)
-    res.json(
-      {
-        status: 0,
-        Message: `Error adding Contacts: ${e}`
-      }
-    )
-  } finally {
-    await mongoClient.close()
+      // await client.db('ancorpData').collection("EpicorPostContacts").drop()
+      const result = await client.db("ancorpData").collection("EpicorPostContacts").updateOne(query, updateDocument)
+
+      console.log(`New Contacts Inserted`)
+      res.json(
+        {
+          status: 1,
+          Message: `New Contatcs Inserted`
+        })
+    } catch (e) {
+      console.log(e)
+      res.json(
+        {
+          status: 0,
+          Message: `Error adding Contacts: ${e}`
+        }
+      )
+    } finally {
+      await mongoClient.close()
+    }
   }
-}
   postContacts(mongoClient)
 })
 
