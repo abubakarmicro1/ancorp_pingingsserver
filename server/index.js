@@ -241,6 +241,57 @@ app.get('/getContactsByEmail', (req, res) => {
   searchEmail(email, mongoClient)
 })
 
+app.get('/getDiscount', (req, res) => {
+
+  const CustNumber = req.query.CustNum
+  const PartNumber = req.query.PartNum
+
+  async function searchDiscount(client) {
+    try {
+      await mongoClient.connect();
+      const CustomersListCodes = client.db("ancorpData").collection("CustomersListCodes")
+      const PriceListDiscounts = client.db("ancorpData").collection("PriceListDiscounts")
+
+      const getListCodes = await CustomersListCodes.findOne({ CustNum: parseInt(CustNumber) });
+
+      if (getListCodes) {
+        const listcode = getListCodes.ListCode
+        const getPricLstDis = await PriceListDiscounts.find({
+          ListCode: listcode,
+          PartNum: PartNumber
+        }).toArray()
+
+        if (getPricLstDis) {
+          res.json({
+            status: 1,
+            data: getPricLstDis,
+          })
+        } else {
+          res.json({
+            status: 0,
+            Message: 'No Discount Found.',
+          })
+        }
+      } else {
+        console.log(`No ListCode Found`)
+        res.json({
+          status: 0,
+          Message: `No discount for this`,
+        })
+      }
+    } catch (e) {
+      console.log(e)
+      res.json(
+        {
+          status: 404,
+          ErrMessage: getErrors(e)
+        }
+      )
+    }
+  }
+  searchDiscount(mongoClient)
+})
+
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
