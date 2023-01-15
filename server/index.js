@@ -62,7 +62,7 @@ app.post('/orderPushing', (req, res) => {
       await mongoClient.connect();
 
       // await client.db('ancorpData').collection("ordersCollector").drop()
-      const query = { name: "ordersCollector" };
+      const query = { name: "ordersCollected" };
       const updateDocument = { $set: { "data": dataToPush.theOrders, "timestamping": new Date() } }
 
       const result = await client.db("ancorpData").collection("ordersCollector").updateOne(query, updateDocument)
@@ -71,13 +71,24 @@ app.post('/orderPushing', (req, res) => {
       //   timestamping: new Date(),
       //   data: dataToPush.theOrders
       // })
-
-      console.log(`New orders Inserted`)
-      res.json(
-        {
-          status: 1,
-          Message: `New orders Inserted`
-        })
+      if(result) {
+        console.log(`New orders Inserted`, result)
+        res.json(
+          {
+            status: 1,
+            Message: `New orders Inserted`,
+            results: result
+          })
+      } else {
+        console.log(`no orders inserted`, result)
+        res.json(
+          {
+            status: 2,
+            Message: `No orders Inserted`,
+            results: result
+          })
+      }
+      
     } catch (e) {
       console.log(e)
       res.json(
