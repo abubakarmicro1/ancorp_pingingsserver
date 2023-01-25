@@ -63,7 +63,7 @@ app.post('/orderPushing', (req, res) => {
 
       // await client.db('ancorpData').collection("ordersCollector").drop()
       const query = { name: "ordersCollected" };
-      const updateDocument = { $set: { "data": dataToPush.theOrders, "timestamping": new Date() } }
+      const updateDocument = { $set: { "data": dataToPush, "timestamping": new Date() } }
 
       const result = await client.db("ancorpData").collection("ordersCollector").updateOne(query, updateDocument)
       // const result = await client.db("ancorpData").collection("ordersCollector").insertOne({
