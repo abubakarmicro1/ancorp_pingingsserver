@@ -77,7 +77,8 @@ app.post('/orderPushing', (req, res) => {
           {
             status: 1,
             Message: `New orders Inserted`,
-            results: result
+            results: result,
+            dataSent: dataToPush
           })
       } else {
         console.log(`no orders inserted`, result)
