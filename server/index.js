@@ -204,7 +204,6 @@ app.post('/postContacts', (req, res) => {
         {
           status: 1,
           Message: `New Contatcs Inserted`,
-          result: result,
           dataSent: dataToPush
         })
     } catch (e) {
