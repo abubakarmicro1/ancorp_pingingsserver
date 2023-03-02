@@ -10,7 +10,7 @@ const herokuUrl = "https://calm-reef-52400.herokuapp.com"
 
 const { MongoClient } = require("mongodb")
 
-const mongoUrl = "mongodb+srv://abubakarMicro1:klfhbughreuigertklfhbughreuigert@ancorpdata.opkex0f.mongodb.net/?retryWrites=true&w=majority";
+const mongoUrl = "mongodb+srv://abubakarMicro1:klfhbughreuigert@ancorpdata.opkex0f.mongodb.net/?retryWrites=true&w=majority";
 const mongoClient = new MongoClient(mongoUrl);
 
 const config = {
