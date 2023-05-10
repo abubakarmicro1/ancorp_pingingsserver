@@ -71,7 +71,7 @@ app.post('/orderPushing', (req, res) => {
       //   timestamping: new Date(),
       //   data: dataToPush.theOrders
       // })
-      if(result) {
+      if (result) {
         console.log(`New orders Inserted`, result)
         res.json(
           {
@@ -89,7 +89,7 @@ app.post('/orderPushing', (req, res) => {
             results: result
           })
       }
-      
+
     } catch (e) {
       console.log(e)
       res.json(
@@ -141,7 +141,17 @@ app.get('/getPriceData', (req, res) => {
       const result = await client.db("ancorpData").collection("priceUpdateCollec").findOne({ name: "priceData" });
       if (result) {
         console.log(`Found the PriceData.`)
-        res.json(result.data)
+        let theResult = result.data
+        let finalArr = []
+        theResult.forEach(prices => {
+          if (prices.update.length === 0) {
+
+          } else {
+            finalArr.push(prices)
+          }
+        });
+
+        res.json(finalArr)
       } else {
         console.log(`No PriceData Found`)
         res.json({ Message: "No PriceData Found" })
@@ -168,7 +178,18 @@ app.get('/getQuantityData', (req, res) => {
       const result = await client.db("ancorpData").collection("quantityUpdateCollec").findOne({ name: "quantityData" });
       if (result) {
         console.log(`Found the quantityData.`)
-        res.json(result.data)
+        let theResult = result.data
+        let finalArr = []
+
+        theResult.forEach(quantities => {
+          if (quantities.update.length === 0) {
+
+          } else {
+            finalArr.push(quantities)
+          }
+        });
+
+        res.json(finalArr)
       } else {
         console.log(`No quantityData Found`)
         res.json({ Message: "No quantityData Found" })
