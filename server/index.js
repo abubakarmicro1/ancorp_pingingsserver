@@ -151,7 +151,9 @@ app.get('/getPriceData', (req, res) => {
           }
         });
 
+        const r2esult = await client.db("ancorpData").collection("priceUpdateCollec").findOneAndUpdate({ name: "priceData" }, { $set: { data: [] } })
         res.json(finalArr)
+
       } else {
         console.log(`No PriceData Found`)
         res.json({ Message: "No PriceData Found" })
@@ -188,7 +190,7 @@ app.get('/getQuantityData', (req, res) => {
             finalArr.push(quantities)
           }
         });
-
+        const r2esult = await client.db("ancorpData").collection("quantityUpdateCollec").findOneAndUpdate({ name: "quantityData" }, { $set: { data: [] } })
         res.json(finalArr)
       } else {
         console.log(`No quantityData Found`)
