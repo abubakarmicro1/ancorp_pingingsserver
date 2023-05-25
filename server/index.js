@@ -210,6 +210,44 @@ app.get('/getQuantityData', (req, res) => {
   findQuantityData(mongoClient)
 })
 
+app.get('/getCustMetaData', (req, res) => {
+  async function findCustomerData(client) {
+    try {
+      await mongoClient.connect();
+
+      const result = await client.db("ancorpData").collection("customerMetaData").findOne({ name: "customerData" });
+      if (result) {
+        console.log(`Found the Data.`)
+        let theResult = result.data
+        let finalArr = []
+
+        theResult.forEach(custMeta => {
+          if (custMeta.update.length === 0) {
+
+          } else {
+            finalArr.push(custMeta)
+          }
+        });
+        const r2esult = await client.db("ancorpData").collection("customerMetaData").findOneAndUpdate({ name: "customerData" }, { $set: { data: [] } })
+        res.json(finalArr)
+      } else {
+        console.log(`No Data Found`)
+        res.json({ Message: "No Data Found" })
+      }
+    } catch (e) {
+      console.log(e)
+      res.json(
+        {
+          status: 0,
+          Message: e
+        }
+      )
+    }
+
+  }
+  findCustomerData(mongoClient)
+})
+
 app.post('/postContacts', (req, res) => {
   const dataToPush = req.body.contacts
   async function postContacts(client) {
