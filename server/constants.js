@@ -1,12 +1,26 @@
 const https = require('https')
 const httpsAgent = require('https-agent')
 const token = Buffer.from(`Vendor.Webconnect:A7uop14`, 'utf8').toString('base64')
-const wooCommerceUrl = "https://ancorp-sandbox.opt7dev.com/wp-json/wc/v3"
 
-const theHost = "https://anc-wil-app03/KineticTest"
-const productionHost = "https://anc-wil-app03/KineticProduction"
+// TEST
+// const wooClientKey = 'ck_4c5ff566e6369faa3512561ae3fa60ed9731a28d';
+// const wooClientSecret = 'cs_9ecb5ec44750ae8dbc7901bbc17720114e6519ef';
+// const wooCommerceUrl = "https://ancorp-sandbox.opt7dev.com/wp-json/wc/v3"
+// const theHost = "https://ANC-WIL-APP03.ancorp.com/KineticTest"
+// const productionHost = "https://ANC-WIL-APP03.ancorp.com/Production"
+// const theTestHost = "https://ANC-WIL-APP03.ancorp.com/KineticTest"
+
+
+// PRODUCTION
+const wooClientKey = 'ck_cae826124bddf2b1a3d8d1bc6fbae5787e30deeb';
+const wooClientSecret = 'cs_e56757445d9e0b1c00f84644e811c36987467077';
+const wooCommerceUrl = "https://ancorp.com/wp-json/wc/v3"
+const theHost = "https://ANC-WIL-APP03.ancorp.com/Production"
+const productionHost = "https://ANC-WIL-APP03.ancorp.com/Production"
+const theTestHost = "https://ANC-WIL-APP03.ancorp.com/Production"
+
 const wiseUrl = "https://www.wiseoption.com.ng/ancorp"
-const herokuUrl = "https://calm-reef-52400.herokuapp.com"
+const herokuUrl = "https://ancorppingingserver.vercel.app"
 
 const { MongoClient } = require("mongodb")
 
@@ -22,9 +36,6 @@ const config = {
     },
     httpsAgent: new https.Agent({ rejectUnauthorized: false })
 }
-
-const wooClientKey = 'ck_4c5ff566e6369faa3512561ae3fa60ed9731a28d';
-const wooClientSecret = 'cs_9ecb5ec44750ae8dbc7901bbc17720114e6519ef';
 
 function basicAuth(key, secret) {
   let hash = btoa(key + ':' + secret);

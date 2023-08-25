@@ -105,6 +105,87 @@ app.post('/orderPushing', (req, res) => {
   pushOrder(mongoClient)
 })
 
+app.post('/wooComerceContactsPushing', (req, res) => {
+  // console.log(req)
+  const dataToPush = req.body
+  const nameToSearch = "nameLast"
+  async function pushWoocommerce(client) {
+    await mongoClient.connect();
+    try {
+      await mongoClient.connect();
+
+      // await client.db('ancorpData').collection("ordersCollector").drop()
+      const query = { name: "wooComerceContactsCollection" };
+      const updateDocument = { $set: { "data": dataToPush.wooComerceContacts, "timestamping": new Date() } }
+
+      const result = await client.db("ancorpData").collection("wooComerceContactsCollection").updateOne(query, updateDocument)
+      // const result = await client.db("ancorpData").collection("ordersCollector").insertOne({
+      //   name: "ordersCollected",
+      //   timestamping: new Date(),
+      //   data: dataToPush.theOrders
+      // })
+      if (result) {
+        console.log(`New Customer Contacts Inserted`, result)
+        res.json(
+          {
+            status: 1,
+            Message: `New Customer Contacts Inserted`,
+            results: result,
+            dataSent: dataToPush
+          })
+      } else {
+        console.log(`no Customer Contacts inserted`, result)
+        res.json(
+          {
+            status: 2,
+            Message: `No Customer Contacts Inserted`,
+            results: result
+          })
+      }
+
+    } catch (e) {
+      console.log(e)
+      res.json(
+        {
+          status: 0,
+          Message: `Error adding Customer Contacts: ${e}`
+        }
+      )
+    } finally {
+      await mongoClient.close()
+    }
+  }
+  pushWoocommerce(mongoClient)
+})
+
+app.get('/wooCommerceContacts', (req, res) => {
+  async function findOrders(client) {
+    try {
+      await mongoClient.connect();
+
+      const result = await client.db("ancorpData")
+        .collection("wooComerceContactsCollection")
+        .findOne({name: "wooComerceContactsCollection"}, { _id: 0, data: true })
+      if (result) {
+        res.json(result)
+      } else {
+        res.json({ Message: "No WooCommerce Contacts Found" })
+      }
+
+    } catch (e) {
+      console.log(e)
+      res.json(
+        {
+          status: 0,
+          Message: e
+        }
+      )
+    }
+
+  }
+  findOrders(mongoClient)
+})
+
 app.get('/gettingOrders', (req, res) => {
   async function findOrders(client) {
     try {
