@@ -167,6 +167,7 @@ app.get('/wooCommerceContacts', (req, res) => {
         .collection("wooComerceContactsCollection")
         .findOne({name: "wooComerceContactsCollection"}, { _id: 0, data: true })
       if (result) {
+        const r2esult = await client.db("ancorpData").collection("wooComerceContactsCollection").findOneAndUpdate({ name: "wooComerceContactsCollection" }, { $set: { data: [] } })
         res.json(result)
       } else {
         res.json({ Message: "No WooCommerce Contacts Found" })
