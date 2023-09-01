@@ -165,7 +165,7 @@ app.get('/wooCommerceContacts', (req, res) => {
 
       const result = await client.db("ancorpData")
         .collection("wooComerceContactsCollection")
-        .findOne({name: "wooComerceContactsCollection"}, { _id: 0, data: true })
+        .findOne({ name: "wooComerceContactsCollection" }, { _id: 0, data: true })
       if (result) {
         const r2esult = await client.db("ancorpData").collection("wooComerceContactsCollection").findOneAndUpdate({ name: "wooComerceContactsCollection" }, { $set: { data: [] } })
         res.json(result)
@@ -186,6 +186,93 @@ app.get('/wooCommerceContacts', (req, res) => {
   }
   findOrders(mongoClient)
 })
+
+// POST CREATED CUSTOMERS
+
+app.post('/createCustomers', (req, res) => {
+  const dataToPush = req.body
+  async function pushWoocommerce(client) {
+    try {
+      await mongoClient.connect();
+
+      const query = { name: "wooCommerceCreated" };
+      const updateDocument = { $set: { "data": dataToPush, "timestamping": new Date() } }
+
+      const result = await client.db("ancorpData").collection("createdCustomers").updateOne(query, updateDocument)
+
+      if (result) {
+        res.json(
+          {
+            status: 1,
+            Message: `New Customer Contacts Inserted`,
+          })
+      } else {
+        res.json(
+          {
+            status: 2,
+            Message: `No Customer Contacts Inserted`,
+            results: result
+          })
+      }
+
+    } catch (e) {
+      console.log(e)
+      res.json(
+        {
+          status: 0,
+          Message: `Error adding Customer Contacts: ${e}`
+        }
+      )
+    } finally {
+      await mongoClient.close()
+    }
+  }
+  pushWoocommerce(mongoClient)
+})
+
+app.get('/getCreateCustomers', (req, res) => {
+  const dataToPush = req.body
+  async function pushWoocommerce(client) {
+    try {
+      await mongoClient.connect();
+
+      const query = { name: "wooCommerceCreated" };
+
+      const result = await client.db("ancorpData").collection("createdCustomers").findOne(query)
+      const result2 = await client.db("ancorpData")
+        .collection("createdCustomers")
+        .findOneAndUpdate(query, { $set: { data: [] } })
+
+      if (result) {
+        res.json(
+          {
+            status: 1,
+            data: result.data
+          })
+      } else {
+        res.json(
+          {
+            status: 2,
+            Message: `No Customer Contacts Inserted`,
+            results: result
+          })
+      }
+
+    } catch (e) {
+      console.log(e)
+      res.json(
+        {
+          status: 0,
+          Message: `Error adding Customer Contacts: ${e}`
+        }
+      )
+    } finally {
+      await mongoClient.close()
+    }
+  }
+  pushWoocommerce(mongoClient)
+})
+
 
 app.get('/gettingOrders', (req, res) => {
   async function findOrders(client) {
