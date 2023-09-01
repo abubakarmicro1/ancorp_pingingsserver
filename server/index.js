@@ -196,7 +196,7 @@ app.post('/createCustomers', (req, res) => {
       await mongoClient.connect();
 
       const query = { name: "wooCommerceCreated" };
-      const updateDocument = { $set: { "data": dataToPush, "timestamping": new Date() } }
+      const updateDocument = { $push: { data: dataToPush }, $set: { "timestamping": new Date() } }
 
       const result = await client.db("ancorpData").collection("createdCustomers").updateOne(query, updateDocument)
 
