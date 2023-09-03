@@ -273,6 +273,48 @@ app.get('/getCreateCustomers', (req, res) => {
   pushWoocommerce(mongoClient)
 })
 
+app.get('/getWooCreatedCustomers', (req, res) => {
+  async function pushWoocommerce(client) {
+    try {
+      await mongoClient.connect();
+
+      const query = { name: "customersUpdated" };
+
+      const result = await client.db("ancorpData").collection("wooCustomersUpdated").findOne(query)
+      const result2 = await client.db("ancorpData")
+        .collection("wooCustomersUpdated")
+        .findOneAndUpdate(query, { $set: { data: [] } })
+
+      if (result) {
+        res.json(
+          {
+            status: 1,
+            data: result.data
+          })
+      } else {
+        res.json(
+          {
+            status: 2,
+            Message: `No Customer Contacts Inserted`,
+            results: result
+          })
+      }
+
+    } catch (e) {
+      console.log(e)
+      res.json(
+        {
+          status: 0,
+          Message: `Error adding Customer Contacts: ${e}`
+        }
+      )
+    } finally {
+      await mongoClient.close()
+    }
+  }
+  pushWoocommerce(mongoClient)
+})
+
 
 app.get('/gettingOrders', (req, res) => {
   async function findOrders(client) {
